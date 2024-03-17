@@ -183,14 +183,12 @@ class _settingState extends State<setting> {
         'dark',
         ThemeData( 
           scaffoldBackgroundColor: colorStyle.background,
-          backgroundColor: colorStyle.blackBackground,
           dividerColor: colorStyle.iconColorDark,
           primaryColor: colorStyle.primaryColor,
           hintColor: colorStyle.fontSecondaryColorDark,
           canvasColor: colorStyle.grayBackground,
           cardColor: colorStyle.grayBackground,
-
-          secondaryHeaderColor: colorStyle.fontColorDark,
+          secondaryHeaderColor: colorStyle.fontColorDark
           // textSelectionColor: colorStyle.fontColorDark,
           // textSelectionHandleColor: colorStyle.fontColorDarkTitle
         ));
