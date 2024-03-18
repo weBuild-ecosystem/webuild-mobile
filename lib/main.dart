@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:crypto/screen/Bottom_Nav_Bar/bottom_nav_bar.dart';
-import 'package:crypto/screen/intro/on_Boarding.dart';
+import 'package:crypto/screen/intro/login.dart';
 import 'package:crypto/screen/setting/themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -56,7 +56,7 @@ class _myAppState extends State<myApp> {
           ///
           routes: <String, WidgetBuilder>{
             "onBoarding": (BuildContext context) =>
-                new onBoarding(themeBloc: _themeBloc)
+                new Login(themeBloc: _themeBloc)
           },
         );
       },

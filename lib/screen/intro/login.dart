@@ -1,22 +1,23 @@
+import 'package:crypto/repository/user.repository.dart';
 import 'package:crypto/screen/Bottom_Nav_Bar/bottom_nav_bar.dart';
 import 'package:crypto/screen/home/home.dart';
 import 'package:crypto/screen/intro/forget_password.dart';
 import 'package:crypto/screen/intro/signup.dart';
 import 'package:crypto/screen/setting/themes.dart';
+import 'package:crypto/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:crypto/component/style.dart';
 
-class login extends StatefulWidget {
+class Login extends StatefulWidget {
   ThemeBloc? themeBloc;
-  login({this.themeBloc});
+  Login({this.themeBloc});
   @override
   _loginState createState() => _loginState(themeBloc);
 }
 
-class _loginState extends State<login> {
+class _loginState extends State<Login> {
   ThemeBloc? _themeBloc;
   _loginState(this._themeBloc);
-  @override
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -106,7 +107,7 @@ class _loginState extends State<login> {
                                     child: TextFormField(
                                       validator: (input) {
                                         if (input!.isEmpty) {
-                                          return 'Please typle an email';
+                                          return 'Ingresa un NIE valido';
                                         }
                                       },
                                       onSaved: (input) => _email = input,
@@ -130,7 +131,7 @@ class _loginState extends State<login> {
                                           contentPadding: EdgeInsets.all(0.0),
                                           filled: true,
                                           fillColor: Colors.transparent,
-                                          labelText: 'Email',
+                                          labelText: 'NIE',
                                           hintStyle:
                                               TextStyle(color: Colors.white),
                                           labelStyle: TextStyle(
@@ -173,7 +174,7 @@ class _loginState extends State<login> {
                                     child: TextFormField(
                                       validator: (input) {
                                         if (input!.isEmpty) {
-                                          return 'Please typle an password';
+                                          return 'Ingresa una contraseña valida';
                                         }
                                       },
                                       onSaved: (input) => _pass = input,
@@ -216,39 +217,23 @@ class _loginState extends State<login> {
                       ///
                       /// forgot password
                       ///
-                      Padding(
-                        padding: const EdgeInsets.only(right: 23.0, top: 9.0),
-                        child: InkWell(
-                            onTap: () {
-                              Navigator.of(context).pushReplacement(
-                                  PageRouteBuilder(
-                                      pageBuilder: (_, __, ___) =>
-                                          forgetPassword(
-                                            themeBloc: _themeBloc,
-                                          )));
-                            },
-                            child: Align(
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                  "Forget Password ?",
-                                  style: TextStyle(
-                                    color: Colors.white70,
-                                    fontSize: 12.0,
-                                  ),
-                                ))),
-                      ),
+                     
                       Padding(
                         padding: const EdgeInsets.only(
                             left: 20.0, right: 20.0, top: 40.0),
                         child: GestureDetector(
-                          onTap: () {
+                          onTap: () async {
                             final formState = _formKey.currentState!;
                             if (formState.validate()) {
                               formState.save();
-                              Navigator.of(context).pushReplacement(
-                                  PageRouteBuilder(
-                                      pageBuilder: (_, __, ___) =>
-                                          bottomNavBar(themeBloc: _themeBloc)));
+                              Future<bool> response = sendLogin({
+                                'dni': _email,
+                                'password': _pass
+                              });
+                              if (await response) {
+                                // ignore: use_build_context_synchronously
+                                //Helper.nextScreen(context, LoadingPage());
+                              }
                             }
                           },
                           child: Container(

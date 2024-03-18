@@ -2,6 +2,7 @@ import 'package:crypto/screen/Bottom_Nav_Bar/bottom_nav_bar.dart';
 import 'package:crypto/screen/home/home.dart';
 import 'package:crypto/screen/intro/login.dart';
 import 'package:crypto/screen/setting/themes.dart';
+import 'package:crypto/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:crypto/component/style.dart';
 
@@ -171,11 +172,9 @@ class _signUpState extends State<signUp> {
                       padding: const EdgeInsets.only(left: 20.0, right: 20.0),
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.of(context)
-                              .pushReplacement(PageRouteBuilder(
-                                  pageBuilder: (_, __, ___) => new login(
+                          Helper.nextScreen(context, Login(
                                         themeBloc: _themeBloc,
-                                      )));
+                                      ));
                         },
                         child: Container(
                           height: 50.0,
