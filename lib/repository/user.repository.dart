@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 // ignore: depend_on_referenced_packages
+import 'package:crypto/models/user.model.dart';
 import 'package:crypto/repository/api.repository.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
@@ -12,15 +13,22 @@ const String authorizationKey = 'authKey';
 Future<bool> sendLogin(Object useBody) async {
   final response = await apiCallHook('post', 'user/login', {}, useBody);
   if (response != null) {
-    /*await WriteCache.setString(
-        key: 'session', value: json.decode(response.body)['token']);
-        currentUser.value = UserModel.fromJSON(json.decode(response.body)['user']);
-    */
+    await WriteCache.setString(
+        key: 'session', value: json.decode(response)['token']);
+        currentUser.value = UserModel.fromJSON(json.decode(response)['user']);
+    
     return true;
   }
   return false;
 }
-
+Future<bool> createUser(Map<String, dynamic> useBody) async {
+  final response = await apiCallHook('post', 'user/create', {}, useBody);
+  if (response != null) {
+    await sendLogin({'dni': useBody['dni'], 'password': useBody['password'] });
+    return true;
+  }
+  return false;
+}
 Future<bool> getUser() async {
   var session = await ReadCache.getString(key: 'session') ?? '';
   if (session != '') {
@@ -32,10 +40,10 @@ Future<bool> getUser() async {
         DeleteCache.deleteKey('session');
         return false;
       } else {
-        /*currentUser.value = UserModel.fromJSON(
-            json.decode(response.body) != null
-                ? json.decode(response.body)['user']
-                : '');*/
+        currentUser.value = UserModel.fromJSON(
+            json.decode(response) != null
+                ? json.decode(response)['user']
+                : '');
       }
       return true;
     }

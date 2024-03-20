@@ -4,6 +4,7 @@ import 'package:crypto/screen/home/home.dart';
 import 'package:crypto/screen/intro/forget_password.dart';
 import 'package:crypto/screen/intro/signup.dart';
 import 'package:crypto/screen/setting/themes.dart';
+import 'package:crypto/utils/constants.dart';
 import 'package:crypto/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:crypto/component/style.dart';
@@ -26,6 +27,7 @@ class _loginState extends State<Login> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   Widget build(BuildContext context) {
+    late String errorMessage = '';
     MediaQueryData mediaQuery = MediaQuery.of(context);
     return Form(
       key: _formKey,
@@ -63,12 +65,11 @@ class _loginState extends State<Login> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            Image.asset("assets/image/logo.png", height: 35.0),
                             Padding(
                               padding:
                                   const EdgeInsets.only(left: 17.0, top: 7.0),
                               child: Text(
-                                "Crypto",
+                                "weBuild",
                                 style: TextStyle(
                                     fontFamily: "Sans",
                                     color: Colors.white,
@@ -226,13 +227,16 @@ class _loginState extends State<Login> {
                             final formState = _formKey.currentState!;
                             if (formState.validate()) {
                               formState.save();
-                              Future<bool> response = sendLogin({
+                              final response = await sendLogin({
                                 'dni': _email,
                                 'password': _pass
                               });
-                              if (await response) {
-                                // ignore: use_build_context_synchronously
-                                //Helper.nextScreen(context, LoadingPage());
+                              if (response) {              
+                                Helper.nextScreen(context, home());
+                              } else {
+                                setState(() {
+                                  errorMessage = 'Datos incorrectos.';
+                                });
                               }
                             }
                           },
@@ -246,7 +250,7 @@ class _loginState extends State<Login> {
                             ),
                             child: Center(
                               child: Text(
-                                "Sign In",
+                                "Iniciar",
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w400,
@@ -260,15 +264,22 @@ class _loginState extends State<Login> {
                       SizedBox(
                         height: 20.0,
                       ),
+                      Text(
+                        errorMessage,
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          color: Constants.errorColor,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                      SizedBox(height: 10,),
                       Padding(
                         padding: const EdgeInsets.only(left: 20.0, right: 20.0),
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.of(context)
-                                .pushReplacement(PageRouteBuilder(
-                                    pageBuilder: (_, __, ___) => new signUp(
+                            Helper.nextScreen(context, signUp(
                                           themeBloc: _themeBloc,
-                                        )));
+                                        ));
                           },
                           child: Container(
                             height: 50.0,
@@ -283,7 +294,7 @@ class _loginState extends State<Login> {
                             ),
                             child: Center(
                               child: Text(
-                                "Create Account",
+                                "Crear cuenta",
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w100,

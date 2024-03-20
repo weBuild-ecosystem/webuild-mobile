@@ -1,7 +1,9 @@
+import 'package:crypto/repository/user.repository.dart';
 import 'package:crypto/screen/Bottom_Nav_Bar/bottom_nav_bar.dart';
 import 'package:crypto/screen/home/home.dart';
 import 'package:crypto/screen/intro/login.dart';
 import 'package:crypto/screen/setting/themes.dart';
+import 'package:crypto/utils/constants.dart';
 import 'package:crypto/utils/helper.dart';
 import 'package:flutter/material.dart';
 import 'package:crypto/component/style.dart';
@@ -14,11 +16,16 @@ class signUp extends StatefulWidget {
 }
 
 class _signUpState extends State<signUp> {
+  late String errorMessage = '';
   ThemeBloc? _themeBloc;
   _signUpState(this._themeBloc);
-  @override
+  final TextEditingController _nieController = TextEditingController();
+  final TextEditingController _userNameController = TextEditingController();
+  final TextEditingController _passwordConfirmController= TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+
   Widget build(BuildContext context) {
     MediaQueryData mediaQuery = MediaQuery.of(context);
     return Scaffold(
@@ -56,12 +63,11 @@ class _signUpState extends State<signUp> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Image.asset("assets/image/logo.png", height: 35.0),
                           Padding(
                             padding:
                                 const EdgeInsets.only(left: 17.0, top: 7.0),
                             child: Text(
-                              "Crypto",
+                              "weBuild",
                               style: TextStyle(
                                   fontFamily: "Sans",
                                   color: Colors.white,
@@ -82,10 +88,40 @@ class _signUpState extends State<signUp> {
                             color: colorStyle.primaryColor,
                             size: 20,
                           ),
-                          controller: _emailController,
+                          controller: _userNameController,
                           hint: 'User Name',
                           obscure: false,
-                          keyboardType: TextInputType.emailAddress,
+                          keyboardType: TextInputType.text,
+                          textAlign: TextAlign.start),
+                    ),
+                     Padding(
+                      padding: const EdgeInsets.only(
+                          left: 20.0, right: 20.0, top: 40.0),
+                      child: _buildTextFeild(
+                          widgetIcon: Icon(
+                            Icons.people,
+                            color: colorStyle.primaryColor,
+                            size: 20,
+                          ),
+                          controller: _phoneController,
+                          hint: 'Telefono',
+                          obscure: false,
+                          keyboardType: TextInputType.text,
+                          textAlign: TextAlign.start),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 20.0, right: 20.0, top: 40.0),
+                      child: _buildTextFeild(
+                          widgetIcon: Icon(
+                            Icons.people,
+                            color: colorStyle.primaryColor,
+                            size: 20,
+                          ),
+                          controller: _nieController,
+                          hint: 'DNI/NIE',
+                          obscure: false,
+                          keyboardType: TextInputType.text,
                           textAlign: TextAlign.start),
                     ),
                     Padding(
@@ -98,7 +134,7 @@ class _signUpState extends State<signUp> {
                             size: 20,
                           ),
                           controller: _emailController,
-                          hint: 'Email',
+                          hint: 'Email de recuperación',
                           obscure: false,
                           keyboardType: TextInputType.emailAddress,
                           textAlign: TextAlign.start),
@@ -113,9 +149,9 @@ class _signUpState extends State<signUp> {
                             color: colorStyle.primaryColor,
                           ),
                           controller: _passwordController,
-                          hint: 'Password',
+                          hint: 'Contraseña',
                           obscure: true,
-                          keyboardType: TextInputType.emailAddress,
+                          keyboardType: TextInputType.text,
                           textAlign: TextAlign.start),
                     ),
                     Padding(
@@ -127,22 +163,55 @@ class _signUpState extends State<signUp> {
                             size: 20,
                             color: colorStyle.primaryColor,
                           ),
-                          controller: _passwordController,
-                          hint: 'Confirm Password',
+                          controller: _passwordConfirmController,
+                          hint: 'Confirmar contraseña',
                           obscure: true,
-                          keyboardType: TextInputType.emailAddress,
+                          keyboardType: TextInputType.text,
                           textAlign: TextAlign.start),
                     ),
+                    Text(
+                        errorMessage,
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          color: Constants.errorColor,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                      SizedBox(height: 10,),
                     Padding(
                       padding: const EdgeInsets.only(
                           left: 20.0, right: 20.0, top: 40.0),
                       child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context)
+                        onTap: () async {
+                          if ((_userNameController.text?.length ?? 0) > 0 && (_nieController.text?.length ?? 0) > 0 && (_passwordController.text?.length ?? 0) > 0 && (_emailController.text?.length ?? 0) > 0 && (_phoneController.text?.length ?? 0) > 0) {
+                              if(_passwordConfirmController.text == _passwordController.text){
+                                final response = await createUser({
+                                  'dni': _emailController.text,
+                                  'password': _passwordController,
+                                  'email': _emailController.text,
+                                  'fullname': _userNameController.text,
+                                  'phone': _phoneController.text
+                                });
+                                if (await response) {
+                                  // ignore: use_build_context_synchronously
+                                  Helper.nextScreen(context, home());
+                                }
+                              } else {
+                              setState(() {
+                                errorMessage = 'Completa el formulario';
+                              });
+                            }
+                              
+                          } else {
+                            setState(() {
+                              errorMessage = 'Completa el formulario';
+                            });
+                          }
+                          /*Navigator.of(context)
                               .pushReplacement(PageRouteBuilder(
                                   pageBuilder: (_, __, ___) => bottomNavBar(
                                         themeBloc: _themeBloc,
-                                      )));
+                                      )));*/
                         },
                         child: Container(
                           height: 50.0,
@@ -154,7 +223,7 @@ class _signUpState extends State<signUp> {
                           ),
                           child: Center(
                             child: Text(
-                              "Register",
+                              "Finalizar",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w400,
@@ -189,7 +258,7 @@ class _signUpState extends State<signUp> {
                           ),
                           child: Center(
                             child: Text(
-                              "Sign In",
+                              "Iniciar sesión",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w400,
