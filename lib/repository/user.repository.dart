@@ -32,7 +32,7 @@ Future<bool> createUser(Map<String, dynamic> useBody) async {
 Future<bool> getUser() async {
   var session = await ReadCache.getString(key: 'session') ?? '';
   if (session != '') {
-    final response = await apiCallHook('get', 'user/data', {
+    final response = await apiCallHook('get', 'user/get', {
       "Cookie": 'access_token=$session'
     }, {});
     if (response != null) {

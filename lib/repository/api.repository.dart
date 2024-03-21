@@ -8,13 +8,13 @@ Future<String?> apiCallHook(String type, String uri, Map useHeaders, Object useB
   final client = http.Client();
   final response;
   if(uri == 'post'){
-   response = await client.post(Uri.parse('$baseUrl/$uri'),
+   response = await client.post(Uri.parse('$baseUrl/$uri/'),
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
         "authorization": authorizationKey,
       },
       body: json.encode(useBody));
-  } else response = await client.get(Uri.parse('$baseUrl/$uri'),
+  } else response = await client.get(Uri.parse('$baseUrl/$uri/'),
       headers: {
         HttpHeaders.contentTypeHeader: 'application/json',
         "authorization": authorizationKey,
@@ -22,7 +22,6 @@ Future<String?> apiCallHook(String type, String uri, Map useHeaders, Object useB
   });
   print(response);
   if (response.statusCode == 202) {
-    
     return response.body;
   }
   return null;

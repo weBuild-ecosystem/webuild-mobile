@@ -12,6 +12,7 @@ class UserModel {
   late String email = '';
   late String password = '';
   late String nie = '';
+  late List<String> entities = [];
   
 //  String role;
 
@@ -25,6 +26,7 @@ class UserModel {
       email = jsonMap['email'] ?? '';
       password = jsonMap['password'] ?? '';
       nie = jsonMap['nie'] ?? '';
+      entities = jsonMap['entities'] ?? [];
     } catch (value) {}
   }
 }

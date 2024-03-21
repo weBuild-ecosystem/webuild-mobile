@@ -228,8 +228,8 @@ class _loginState extends State<Login> {
                             if (formState.validate()) {
                               formState.save();
                               final response = await sendLogin({
-                                'dni': _email,
-                                'password': _pass
+                                'dni': _emailController.text,
+                                'password': _passwordController.text
                               });
                               if (response) {              
                                 Helper.nextScreen(context, home());
