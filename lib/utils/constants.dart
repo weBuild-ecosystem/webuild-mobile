@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-const String baseUrl = 'http://localhost:3001';
+const String baseUrl = 'http://192.168.18.30:3001';
 const String authorizationKey = 'authKey';
 
 class Constants {

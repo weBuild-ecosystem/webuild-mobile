@@ -44,7 +44,7 @@ class _myAppState extends State<myApp> {
       stream: _themeBloc!.themeDataStream,
       builder: (BuildContext context, AsyncSnapshot<ThemeData> snapshot) {
         return MaterialApp(
-          title: 'Crypto Apps',
+          title: 'weBuild',
           theme: snapshot.data,
           debugShowCheckedModeBanner: false,
           home: SplashScreen(

@@ -11,7 +11,7 @@ final dio = Dio();
 const String authorizationKey = 'authKey';
 
 Future<bool> sendLogin(Object useBody) async {
-  final response = await apiCallHook('post', 'user/login', useBody);
+  final response = await apiCallHook('user/login', useBody);
   if (response != null) {
     await WriteCache.setString(
         key: 'session', value: json.decode(response)['token']);
@@ -22,7 +22,7 @@ Future<bool> sendLogin(Object useBody) async {
   return false;
 }
 Future<bool> createUser(Map<String, dynamic> useBody) async {
-  final response = await apiCallHook('post', 'user/create', useBody);
+  final response = await apiCallHook('user/create', useBody);
   if (response != null) {
     await sendLogin({'dni': useBody['dni'], 'password': useBody['password'] });
     return true;
@@ -31,7 +31,7 @@ Future<bool> createUser(Map<String, dynamic> useBody) async {
 }
 Future<bool> getUser() async {
   
-    final response = await apiCallHook('get', 'user/get', {});
+    final response = await apiCallHook('user/get', {});
     if (response != null) {
       if (json.decode(response) == null) {
         DeleteCache.deleteKey('session');

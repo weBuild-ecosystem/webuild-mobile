@@ -187,7 +187,7 @@ class _signUpState extends State<signUp> {
                               if(_passwordConfirmController.text == _passwordController.text){
                                 final response = await createUser({
                                   'dni': _emailController.text,
-                                  'password': _passwordController,
+                                  'password': _passwordController.text,
                                   'email': _emailController.text,
                                   'fullname': _userNameController.text,
                                   'phone': _phoneController.text
@@ -198,7 +198,7 @@ class _signUpState extends State<signUp> {
                                 }
                               } else {
                               setState(() {
-                                errorMessage = 'Completa el formulario';
+                                errorMessage = 'Las contraseñas deben ser iguales';
                               });
                             }
                               

@@ -10,7 +10,7 @@ import 'package:cache_manager/cache_manager.dart';
 Future<bool> getEntitie(String id) async {
   var session = await ReadCache.getString(key: 'session') ?? '';
   if (session != '') {
-    final response = await apiCallHook('post', 'entities/get', {'id': id});
+    final response = await apiCallHook('entities/get', {'id': id});
     if (response != null) {
       if (json.decode(response) == null) {
         return false;
@@ -29,7 +29,7 @@ Future<bool> getEntitie(String id) async {
 Future<bool> getMyEntities(List<String> entities) async {
   var session = await ReadCache.getString(key: 'session') ?? '';
   if (session != '') {
-    final response = await apiCallHook('post', 'entities/getmyentities', {'entities': entities});
+    final response = await apiCallHook('entities/getmyentities', {'entities': entities});
     if (response != null) {
       if (json.decode(response) == null) {
         return false;
