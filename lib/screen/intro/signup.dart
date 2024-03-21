@@ -186,7 +186,7 @@ class _signUpState extends State<signUp> {
                           if ((_userNameController.text?.length ?? 0) > 0 && (_nieController.text?.length ?? 0) > 0 && (_passwordController.text?.length ?? 0) > 0 && (_emailController.text?.length ?? 0) > 0 && (_phoneController.text?.length ?? 0) > 0) {
                               if(_passwordConfirmController.text == _passwordController.text){
                                 final response = await createUser({
-                                  'dni': _emailController.text,
+                                  'dni': _nieController.text,
                                   'password': _passwordController.text,
                                   'email': _emailController.text,
                                   'fullname': _userNameController.text,
