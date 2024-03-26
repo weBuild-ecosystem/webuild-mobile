@@ -4,9 +4,9 @@ import 'package:flutter/cupertino.dart';
 
 enum UserState { available, away, busy }
 
-ValueNotifier<List<entitieModel>> currentEntities = ValueNotifier(entitieModel() as List<entitieModel>);
+ValueNotifier<List<EntitieModel>> currentEntities = ValueNotifier(<EntitieModel>[]);
 
-class entitieModel {
+class EntitieModel {
   late int id = 0;
   late String image = '';
   late String title = '';
@@ -19,9 +19,9 @@ class entitieModel {
   
 //  String role;
 
-  entitieModel();
+  EntitieModel();
 
-  entitieModel.fromJSON(Map<String, dynamic> jsonMap) {
+  EntitieModel.fromJSON(Map<String, dynamic> jsonMap) {
     try {
       id = jsonMap['id'] ?? 0;
       

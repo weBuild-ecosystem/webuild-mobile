@@ -26,7 +26,7 @@ class UserModel {
       email = jsonMap['email'] ?? '';
       password = jsonMap['password'] ?? '';
       nie = jsonMap['nie'] ?? '';
-      entities = jsonMap['entities'] ?? [];
+      entities = List<String>.from(jsonMap['entities'] ?? []);
     } catch (value) {}
   }
 }

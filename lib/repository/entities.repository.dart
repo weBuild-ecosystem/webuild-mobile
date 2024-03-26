@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 // ignore: depend_on_referenced_packages
+import 'package:crypto/models/entities.model.dart';
 import 'package:crypto/models/user.model.dart';
 import 'package:crypto/repository/api.repository.dart';
 import 'package:http/http.dart' as http;
@@ -15,10 +16,7 @@ Future<bool> getEntitie(String id) async {
       if (json.decode(response) == null) {
         return false;
       } else {
-        currentUser.value = UserModel.fromJSON(
-            json.decode(response) != null
-                ? json.decode(response)['entitie']
-                : '');
+        
       }
       return true;
     }
@@ -34,10 +32,18 @@ Future<bool> getMyEntities(List<String> entities) async {
       if (json.decode(response) == null) {
         return false;
       } else {
-        currentUser.value = UserModel.fromJSON(
+        List<dynamic> entitiesCast = json.decode(response)['entities'];
+        List<EntitieModel> dynamicEntities = [];
+        if(entitiesCast.isNotEmpty){
+          entitiesCast.map((e) => {
+            dynamicEntities.add(EntitieModel.fromJSON(
             json.decode(response) != null
                 ? json.decode(response)['entities']
-                : '');
+                : ''))
+          });
+          currentEntities.value = dynamicEntities;
+        }
+        
       }
       return true;
     }

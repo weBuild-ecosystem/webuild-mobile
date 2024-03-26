@@ -25,7 +25,10 @@ class _loginState extends State<Login> {
   String? _email, _pass;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+void initState() {
+    verifySession(context);
+    super.initState();
+  }
   Widget build(BuildContext context) {
     late String errorMessage = '';
     MediaQueryData mediaQuery = MediaQuery.of(context);

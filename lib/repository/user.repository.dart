@@ -3,6 +3,9 @@ import 'dart:io';
 // ignore: depend_on_referenced_packages
 import 'package:crypto/models/user.model.dart';
 import 'package:crypto/repository/api.repository.dart';
+import 'package:crypto/repository/entities.repository.dart';
+import 'package:crypto/screen/home/home.dart';
+import 'package:crypto/utils/helper.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 import 'package:cache_manager/cache_manager.dart';
@@ -10,6 +13,13 @@ import 'package:cache_manager/cache_manager.dart';
 final dio = Dio();
 const String authorizationKey = 'authKey';
 
+
+Future<void> verifySession(context) async {
+  
+  if (await getUser()) {
+    Helper.nextScreen(context, home());
+  }
+}
 Future<bool> sendLogin(Object useBody) async {
   final response = await apiCallHook('user/login', useBody);
   if (response != null) {
@@ -37,6 +47,7 @@ Future<bool> getUser() async {
         DeleteCache.deleteKey('session');
         return false;
       } else {
+        await getMyEntities(List<String>.from(json.decode(response)['entities']));
         currentUser.value = UserModel.fromJSON(
             json.decode(response) != null
                 ? json.decode(response)['user']

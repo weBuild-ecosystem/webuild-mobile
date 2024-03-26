@@ -1,44 +1,23 @@
 import 'dart:async';
+import 'dart:ffi';
+import 'package:crypto/models/entities.model.dart';
+import 'package:crypto/repository/user.repository.dart';
+import 'package:crypto/screen/home/votations.dart';
+import 'package:crypto/utils/helper.dart';
 
-import 'package:crypto/component/gainersModel.dart';
-import 'package:crypto/component/loserModel.dart';
-import 'package:crypto/component/modelGridHome.dart';
-import 'package:crypto/screen/crypto_detail_card_homeScreen/DetailCryptoValue/cardDetailHome.dart';
-import 'package:crypto/screen/home/Gainer.dart';
-import 'package:crypto/screen/home/Loser.dart';
 import 'package:flutter/material.dart';
-import 'package:crypto/component/style.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:shimmer/shimmer.dart';
+
 
 import '../../Library/carousel_pro/src/carousel_pro.dart';
-import '../../library/sparkline/sparkline.dart';
 
 class home extends StatefulWidget {
   _homeState createState() => _homeState();
 }
 
 class _homeState extends State<home> {
-  ///
-  /// Get image data dummy from firebase server
-  ///
-  var imageNetwork = NetworkImage(
-      "https://firebasestorage.googleapis.com/v0/b/beauty-look.appspot.com/o/Screenshot_20181005-213938.png?alt=media&token=8c1abb09-4acf-45cf-9383-2f94d93f4ec9");
-
-  ///
-  /// check the condition is right or wrong for image loaded or no
-  ///
-  bool loadCard = true;
-
-  @override
   @override
   void initState() {
-    Timer(Duration(seconds: 3), () {
-      setState(() {
-        loadCard = false;
-      });
-    });
-    // TODO: implement initState
+    getUser();
     super.initState();
   }
 
@@ -73,343 +52,26 @@ class _homeState extends State<home> {
                   ],
                 )),
             SizedBox(height: 10.0),
-
-            ///
-            ///
-            /// check the condition if image data from server firebase loaded or no
-            /// if image loaded true (image still downloading from server)
-            /// Card to set card loading animation
-            ///
-
-            loadCard ? _loadingCardAnimation(context) : _cardLoaded(context),
-
-            ///
-            /// Tab bar custom
-            ///
-            Container(
-              height: 700.0,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Expanded(
-                    child: DefaultTabController(
-                      length: 2,
-                      child: new Scaffold(
-                        appBar: PreferredSize(
-                          preferredSize:
-                              Size.fromHeight(53.0), // here the desired height
-                          child: new AppBar(
-                            backgroundColor:
-                                Theme.of(context).scaffoldBackgroundColor,
-                            elevation: 0.0,
-                            centerTitle: true,
-                            flexibleSpace: SafeArea(
-                              child: Container(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 100.0),
-                                  child: new TabBar(
-                                    indicatorColor: colorStyle.primaryColor,
-                                    labelColor: Theme.of(context).primaryColor,
-                                    unselectedLabelColor:
-                                        Theme.of(context).secondaryHeaderColor,
-                                    indicatorSize: TabBarIndicatorSize.label,
-                                    tabs: [
-                                      new Tab(
-                                        child: Row(
-                                          children: <Widget>[
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 4.0),
-                                              child: Icon(
-                                                IconData(0xe900,
-                                                    fontFamily: 'gainers'),
-                                                size: 15.0,
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 8.0),
-                                              child: Text(
-                                                "Gainers",
-                                                style: TextStyle(
-                                                    fontFamily: "Sans"),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      new Tab(
-                                        child: Row(
-                                          children: <Widget>[
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 8.0),
-                                              child: Icon(
-                                                IconData(0xe901,
-                                                    fontFamily: 'loser'),
-                                                size: 15.0,
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 8.0),
-                                              child: Text("Loser"),
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            automaticallyImplyLeading: false,
-                          ),
-                        ),
-                        body: Padding(
-                          padding: const EdgeInsets.only(top: 10.0),
-                          child: new TabBarView(
-                            children: [
-                              gainer(),
-                              loser(),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            ValueListenableBuilder(valueListenable: currentEntities, 
+            builder: (BuildContext context, value, Widget? child) {
+                return ListView.builder(
+                  itemCount: value.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      onTap: () {
+                        Helper.nextScreen(context, Votations(entitie: value[index]));
+                      },
+                      leading: Icon(Icons.build),
+                      title: Text(value[index].title),
+                      trailing: Icon(Icons.forward),
+                    );
+                  },
+                );
+            })
           ],
         ),
       ),
     );
   }
 }
-
-class card extends StatelessWidget {
-  gridHome item;
-  card(this.item);
-  @override
-  Widget build(BuildContext context) {
-    double _width = MediaQuery.of(context).size.width;
-    return Padding(
-      padding: const EdgeInsets.only(top: 3.0, bottom: 3.0),
-      child: InkWell(
-        onTap: () {
-          Navigator.of(context).push(PageRouteBuilder(
-              pageBuilder: (_, __, ___) => new cardDetailHome(
-                    item: item,
-                  )));
-        },
-        child: Container(
-          height: 70.0,
-          width: _width / 2.2,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(5.0)),
-              color: Theme.of(context).canvasColor,
-              boxShadow: [
-                BoxShadow(
-                    color: Color(0xFF656565).withOpacity(0.15),
-                    blurRadius: 1.0,
-                    spreadRadius: 1.0,
-                    offset: Offset(0.1, 1.0))
-              ]),
-          child: Stack(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(top: 12.0, left: 10.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      item.name!,
-                      style: TextStyle(
-                          color: Theme.of(context).secondaryHeaderColor,
-                          fontFamily: "Popins",
-                          fontWeight: FontWeight.w500,
-                          fontSize: 14.0),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 6.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            item.valueMarket!,
-                            style: TextStyle(
-                                color: item.chartColor,
-                                fontFamily: "Gotik",
-                                fontSize: 13.5),
-                          ),
-                          Text(
-                            item.valuePercent!,
-                            style: TextStyle(color: item.chartColor),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  height: 30.0,
-                  child: new Sparkline(
-                    lineGradient: new LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [Colors.purple, Colors.purple],
-                    ),
-                    data: item.data,
-                    lineWidth: 0.3,
-                    fillMode: FillMode.below,
-                    lineColor: item.chartColor!,
-                    fillGradient: new LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: item.chartColorGradient!,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class cardLoading extends StatelessWidget {
-  gridHome item;
-  cardLoading(this.item);
-  @override
-  Widget build(BuildContext context) {
-    double _width = MediaQuery.of(context).size.width;
-    return Padding(
-      padding: const EdgeInsets.only(top: 3.0, bottom: 3.0),
-      child: Container(
-        height: 70.0,
-        width: _width / 2.2,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(5.0)),
-            color: Theme.of(context).canvasColor,
-            boxShadow: [
-              BoxShadow(
-                  color: Color(0xFF656565).withOpacity(0.15),
-                  blurRadius: 1.0,
-                  spreadRadius: 1.0,
-                  offset: Offset(0.1, 1.0))
-            ]),
-        child: Shimmer.fromColors(
-          baseColor: Color(0xFF3B4659),
-          highlightColor: Color(0xFF606B78),
-          child: Stack(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(top: 12.0, left: 10.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      color: Theme.of(context).hintColor,
-                      height: 20.0,
-                      width: 70.0,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 6.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
-                            height: 17.0,
-                            width: 70.0,
-                          ),
-                          Container(
-                            color: Theme.of(context).hintColor,
-                            height: 17.0,
-                            width: 70.0,
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  height: 30.0,
-                  child: new Sparkline(
-                    lineGradient: new LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [Colors.purple, Colors.purple],
-                    ),
-                    data: item.data,
-                    lineWidth: 0.3,
-                    fillMode: FillMode.below,
-                    lineColor: item.chartColor!,
-                    fillGradient: new LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: item.chartColorGradient!,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-///
-///
-/// Calling imageLoading animation for set a grid layout
-///
-///
-Widget _loadingCardAnimation(BuildContext context) {
-  return GridView.count(
-      shrinkWrap: true,
-      padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
-      crossAxisSpacing: 12.0,
-      mainAxisSpacing: 12.0,
-      childAspectRatio: 1.745,
-      crossAxisCount: 2,
-      primary: false,
-      children: List.generate(
-        listGridHome.length,
-        (index) => cardLoading(listGridHome[index]),
-      ));
-}
-
-///
-///
-/// Calling ImageLoaded animation for set a grid layout
-///
-///
-Widget _cardLoaded(BuildContext context) {
-  return GridView.count(
-      shrinkWrap: true,
-      padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 0.0),
-      crossAxisSpacing: 12.0,
-      mainAxisSpacing: 12.0,
-      childAspectRatio: 1.745,
-      crossAxisCount: 2,
-      primary: false,
-      children: List.generate(
-        listGridHome.length,
-        (index) => card(listGridHome[index]),
-      ));
-}
+ 
