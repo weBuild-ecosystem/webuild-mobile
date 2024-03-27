@@ -94,7 +94,7 @@ class _votationState extends State<VoteVotations> {
                       },
                       leading: CircleAvatar(backgroundColor: index == vote ? Color.fromARGB(255, 30, 158, 30) : const Color.fromARGB(255, 126, 151, 126), radius: 5),
                       title: Text(widget.votation.options[index], style: TextStyle(color: Color.fromARGB(255, 178, 179, 182),)),
-                      trailing: Text(getPercentageOfVotations(widget.votation, index).toString() + '%', style: TextStyle(color: Colors.white)),
+                      trailing: Text(dissabled == 0 ? '?%' : getPercentageOfVotations(widget.votation, index).toString() + '%' , style: TextStyle(color: Colors.white)),
                     );
                   },
                 ),
