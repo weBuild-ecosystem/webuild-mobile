@@ -35,13 +35,13 @@ class VotationModel {
 
 class VoteModel {
   late String from_id;
-  late String value;
+  late int value;
   VoteModel();
   VoteModel.fromJSON(Map<String, dynamic> jsonMap) {
     try {
 
       from_id = jsonMap['from_id'] ?? '';
-      value = jsonMap['value'] ?? '';
+      value = jsonMap['value'] ?? 0;
       
 
     } catch (value) {}

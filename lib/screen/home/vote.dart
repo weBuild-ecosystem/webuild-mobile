@@ -26,7 +26,6 @@ class _votationState extends State<VoteVotations> {
   int vote = -1;
   String errorMessage = '';
   int dissabled = 0;
-  
   void initState() {
     DateTime tryNow = new DateTime.now();
     //SI, intente usar map pero no hace el bucle debe ser por venir de currentValue    
@@ -38,11 +37,13 @@ class _votationState extends State<VoteVotations> {
         });
       }
     }
+
     if(tryNow.compareTo(widget.votation.timeStart) > 0 && tryNow.compareTo(widget.votation.timeEnd) < 0){
       
     } else setState(() {
           dissabled = -1;
-        });
+    });
+    
     super.initState();
     
   }
@@ -93,7 +94,7 @@ class _votationState extends State<VoteVotations> {
                       },
                       leading: CircleAvatar(backgroundColor: index == vote ? Color.fromARGB(255, 30, 158, 30) : const Color.fromARGB(255, 126, 151, 126), radius: 5),
                       title: Text(widget.votation.options[index], style: TextStyle(color: Color.fromARGB(255, 178, 179, 182),)),
-                      trailing: Text('?%', style: TextStyle(color: Colors.white)),
+                      trailing: Text(getPercentageOfVotations(widget.votation, index).toString() + '%', style: TextStyle(color: Colors.white)),
                     );
                   },
                 ),

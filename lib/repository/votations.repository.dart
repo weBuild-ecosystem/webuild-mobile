@@ -24,7 +24,20 @@ Future<dynamic> getVotations(String from_id) async {
   
   return null;
 }
-
+int getNumberOfVotes(VotationModel votation, int voteIndex){
+  int count = 0;
+  for(var i=0; i<votation.votes.length; i++){
+      if(votation.votes[i].value == voteIndex){
+        count++;
+      }
+    
+  }
+  return count;
+}
+double getPercentageOfVotations(VotationModel votation, int voteIndex){
+  int countFinal = getNumberOfVotes(votation, voteIndex);
+  return (countFinal/votation.votes.length) * 100;
+}
 Future<dynamic> addVoteVotation(String from_id, String id, int vote) async {
   final response = await apiCallHook('votations/updatevotes', {'from_id': from_id, 'id': id, 'vote': vote});
   if (response != null) {
