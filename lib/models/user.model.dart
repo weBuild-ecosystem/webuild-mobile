@@ -7,7 +7,7 @@ enum UserState { available, away, busy }
 ValueNotifier<UserModel> currentUser = ValueNotifier(UserModel());
 
 class UserModel {
-  late int id = 0;
+  late String id = '';
   late String fullname = '';
   late String email = '';
   late String password = '';
@@ -20,7 +20,7 @@ class UserModel {
 
   UserModel.fromJSON(Map<String, dynamic> jsonMap) {
     try {
-      id = jsonMap['id'] ?? 0;
+      id = jsonMap['_id'] ?? '';
       
       fullname = jsonMap['fullname'] ?? 'Complete';
       email = jsonMap['email'] ?? '';

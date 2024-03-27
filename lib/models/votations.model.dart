@@ -1,21 +1,23 @@
 // ignore_for_file: non_constant_identifier_names
+import 'package:flutter/cupertino.dart';
 
+ValueNotifier<List<VotationModel>> currentVotations = ValueNotifier(<VotationModel>[]);
 
 
 class VotationModel {
-  late int id = 0;
+  late String id = '';
   late String image;
   late String title;
   late String description;
   late List<String> options;
-  late String timeStart;
-  late String timeEnd;
+  late DateTime timeStart;
+  late DateTime timeEnd;
   late List<VoteModel> votes;
   late String from_id;
   VotationModel();
   VotationModel.fromJSON(Map<String, dynamic> jsonMap) {
     try {
-      id = jsonMap['id'] ?? 0;
+      id = jsonMap['_id'] ?? '';
       
       image = jsonMap['image'] ?? '';
       title = jsonMap['title'] ?? '';
@@ -23,8 +25,8 @@ class VotationModel {
       options = List<String>.from(jsonMap['options'] ?? []);
       List<dynamic> rss = jsonMap['votes'] ?? [];
       votes = [...rss.map((e) => VoteModel.fromJSON(e))];
-      timeStart = jsonMap['timeStart'] ?? '';
-      timeEnd = jsonMap['timeEnd'] ?? '';
+      timeStart = DateTime.parse(jsonMap['timeStart'] ?? '') ?? DateTime.now();
+      timeEnd = DateTime.parse(jsonMap['timeEnd'] ?? '') ?? DateTime.now();
       from_id = jsonMap['from_id'] ?? '';
 
     } catch (value) {}

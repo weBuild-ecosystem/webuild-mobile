@@ -32,16 +32,13 @@ Future<bool> getMyEntities(List<String> entities) async {
       if (json.decode(response) == null) {
         return false;
       } else {
-        List<dynamic> entitiesCast = json.decode(response)['entities'];
+        List<dynamic> entitiesCast = json.decode(response)['entities'] ?? [];
         List<EntitieModel> dynamicEntities = [];
         if(entitiesCast.isNotEmpty){
-          entitiesCast.map((e) => {
-            dynamicEntities.add(EntitieModel.fromJSON(
-            json.decode(response) != null
-                ? json.decode(response)['entities']
-                : ''))
-          });
-          currentEntities.value = dynamicEntities;
+          for(var i = 0; i<entitiesCast.length; i++){
+            dynamicEntities.add(EntitieModel.fromJSON(entitiesCast[i]));
+          }
+          currentEntities.value = dynamicEntities.map((e) => e).toList();
         }
         
       }

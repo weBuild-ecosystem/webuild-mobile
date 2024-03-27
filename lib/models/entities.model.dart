@@ -7,28 +7,18 @@ enum UserState { available, away, busy }
 ValueNotifier<List<EntitieModel>> currentEntities = ValueNotifier(<EntitieModel>[]);
 
 class EntitieModel {
-  late int id = 0;
-  late String image = '';
-  late String title = '';
-  late String description = '';
-  late List<String> options = [];
-  late String timeStart = '';
-  late String timeEnd = '';
-  late List<VoteModel> votes = [];
-
-  
-//  String role;
+  late String id = '';
+  late int type = 0;
+  late String fullname = '';
+  late List<String> nies = [];
 
   EntitieModel();
-
   EntitieModel.fromJSON(Map<String, dynamic> jsonMap) {
     try {
-      id = jsonMap['id'] ?? 0;
-      
-      image = jsonMap['image'] ?? '';
-      title = jsonMap['title'] ?? 'Complete';
-      description = jsonMap['description'] ?? 'Complete';
-      options = jsonMap['options'] ?? [];
+      id = jsonMap['_id'] ?? '';
+      fullname = jsonMap['fullname'] ?? '';
+      type = jsonMap['type'] ?? 0;
+      nies = List<String>.from(jsonMap['nies'] ?? []);
     } catch (value) {}
   }
 }

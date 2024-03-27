@@ -43,7 +43,7 @@ Future<bool> getUser() async {
   
     final response = await apiCallHook('user/get', {});
     if (response != null) {
-      if (json.decode(response) == null) {
+      if (json.decode(response)['user'] == null) {
         DeleteCache.deleteKey('session');
         return false;
       } else {
